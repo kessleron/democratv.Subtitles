@@ -29,3 +29,6 @@ yarn-error.log*
 # uploaded files
 /server/uploads/*
 !/server/uploads/.gitkeep
+# catalog data
+/catalog/data/*
+!/catalog/data/.gitkeep
