@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>ניהול תערוכה</title>
+<style>
+body { font-family: sans-serif; margin: 40px; }
+label { display:block; margin-top:10px; }
+.artwork { border-bottom: 1px solid #ccc; padding: 10px 0; }
+img { max-width: 100px; display:block; }
+</style>
+</head>
+<body>
+<h1>ניהול עבודות</h1>
+<form id="form">
+  <label>כותרת <input name="title"></label>
+  <label>תיאור <input name="description"></label>
+  <label>תמונה (URL) <input name="image"></label>
+  <button type="submit">הוסף</button>
+</form>
+<div id="list"></div>
+<script>
+async function load() {
+  const res = await fetch('/api/artworks');
+  const data = await res.json();
+  const list = document.getElementById('list');
+  list.innerHTML = data.map(a => `<div class="artwork" data-id="${a.id}"><h3>${a.title}</h3><p>${a.description}</p><img src="${a.image}" alt=""><button onclick="del('${a.id}')">מחק</button></div>`).join('');
+}
+async function del(id) {
+  await fetch('/api/artworks/' + id, {method:'DELETE'});
+  load();
+}
+const form = document.getElementById('form');
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  const formData = new FormData(form);
+  const obj = Object.fromEntries(formData.entries());
+  await fetch('/api/artworks', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(obj)});
+  form.reset();
+  load();
+});
+load();
+</script>
+</body>
+</html>

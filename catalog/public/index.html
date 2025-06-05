@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>קטלוג תערוכה</title>
+<style>
+body { font-family: sans-serif; margin: 40px; }
+.artwork { border-bottom: 1px solid #ccc; padding: 10px 0; }
+img { max-width: 200px; display:block; }
+</style>
+</head>
+<body>
+<h1>קטלוג תערוכה</h1>
+<div id="list"></div>
+<script>
+async function load() {
+  const res = await fetch('/api/artworks');
+  const data = await res.json();
+  const list = document.getElementById('list');
+  list.innerHTML = data.map(a => `<div class="artwork"><h3>${a.title}</h3><p>${a.description}</p><img src="${a.image}" alt=""></div>`).join('');
+}
+load();
+</script>
+</body>
+</html>
